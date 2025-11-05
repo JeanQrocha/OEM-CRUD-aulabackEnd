@@ -20,8 +20,17 @@ class ContollerProduto {
     async PegarUm(req, res) {
         try {
 
+            // const {id} = req.params
+            // const {id} = req.bory
+
+            // const params = req.params
+            // params.id
+            const id = req.params.id
+
+            const produto = await ServiceProduto.PegarUm(id)
+
             res.status(200).send(
-                "pegar um"
+                { data: produto }
             )
         } catch (error) {
             res.status(500).send({ msg: error.menssage })
@@ -36,11 +45,9 @@ class ContollerProduto {
 
             const { nome, disponivel, quantidade } = req.body
 
-            await ServiceProduto.Criar(nome , disponivel, quantidade)
+            await ServiceProduto.Criar(nome, disponivel, quantidade)
 
-            res.status(200).send(
-                "criando"
-            )
+            res.status(200).send({msg: "criado com sucesso"})
 
         } catch (error) {
             res.status(500).send({ msg: error.menssage })
@@ -50,12 +57,16 @@ class ContollerProduto {
     async Alterar(req, res) {
         try {
             const id = req.params.id
-            const { nome, disponivel, quantidade } = req.body
+            // const { nome, disponivel, quantidade } = req.body
 
-            await ServiceProduto.Alterar(nome , disponivel, quantidade)
+            const nome = req.body?.nome // ? se nao tiver nada ele vai colocar undefined
+            const disponivel = req.body?.disponivel
+            const quantidade = req.body?.quantidade
+
+            await ServiceProduto.Alterar(id, nome, disponivel, quantidade)
 
             res.status(200).send(
-                "alterando"
+                {msg:"alterado com sucesso"}
             )
 
         } catch (error) {
@@ -65,9 +76,12 @@ class ContollerProduto {
 
     async Deletar(req, res) {
         try {
+            const id = req.params.id
 
-            res.status(200).send(
-                "deletando"
+            const produto = await ServiceProduto.Deletar(id)
+
+            res.status(204).send(
+                { data: produto }
             )
 
         } catch (error) {

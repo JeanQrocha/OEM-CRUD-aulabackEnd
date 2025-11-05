@@ -5,9 +5,24 @@ class ServiceProduto {
         return Produto.findAll()
     }
 
-    async PegarUm() { }
+    async PegarUm(id) {
+        if (!id) {
+            throw new Error("Favor informar um ID");
+        }
+        const produto = await Produto.findByPk(id)
+
+        if (!produto) {
+            throw new Error(`Produto ${id} não encontrado`);
+            
+        }
+
+        return produto
+    }
 
     async Criar(nome, disponivel, quantidade) {
+        if (!nome || !disponivel || !quantidade) {
+            throw new Error('Favor preencher todos os campos')
+        }
         await Produto.create({
             nome, disponivel, quantidade
         })
@@ -15,16 +30,37 @@ class ServiceProduto {
 
     async Alterar(id, nome, disponivel, quantidade) {
 
-        const produto = await produto.findBypkid
+          if (!id) {
+            throw new Error('Favor preencher todas as informaçoes')
+        }
 
-        produto.nome = nome
-        produto.email = disponivel
-        produto.quantidade = quantidade
+        const produtoVelho = await Produto.findByPk(id)
 
-        return user.save()
+         if (!produtoVelho) {
+            throw new Error(`Produto ${id} não encontrado`)
+        }
+
+        produtoVelho.nome = nome || produtoVelho.nome // se nao receber nada ele vai salvar o antigo
+        produtoVelho.email = disponivel || produtoVelho.email
+        produtoVelho.quantidade = quantidade || produtoVelho.quantidade
+
+        return produtoVelho.save()
      }
 
-    async Deletar() { }
+    async Deletar(id) { 
+        
+        if (!id) {
+            throw new Error("Favor informar um ID");
+        }
+        const produto = await Produto.findByPk(id)
+
+        if (!produto) {
+            throw new Error(`Produto ${id} não encontrado`);
+            
+        }
+
+        return produto.destroy()
+    }
 
 
 }
